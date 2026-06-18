@@ -1,0 +1,25 @@
+# Tasks: Página de Edición de Empresa con Búsqueda y Gestión de Usuarios
+
+- [x] **Redirección de Edición:** Reemplazar el botón de edición modal en `EmpresaCard` (`EmpresasClient.tsx`) con un enlace estándar a `/dashboard/empresas/[id]/editar`.
+- [x] **Página de Edición (`page.tsx`):** Crear la ruta dinámica `[id]/editar/page.tsx` cargando la empresa, sus miembros, todas las empresas del sistema y la lista completa de usuarios de forma asíncrona.
+- [x] **Formulario de Edición (`EditarEmpresaForm.tsx`):**
+  - [x] Implementar estructura de pestañas para dividir "Datos Generales" y "Usuarios / Miembros".
+  - [x] Agregar buscador reactivo por nombre o correo.
+  - [x] Crear layout de dos columnas para visualizar miembros pertenecientes (Asociados) y no pertenecientes (Disponibles).
+  - [x] Programar botones de "Agregar" y "Remover" para cambiar el estado reactivo del listado de miembros.
+  - [x] Mapear los miembros seleccionados a inputs ocultos y adjuntar los IDs correctos en el envío de `FormData` para compatibilidad con la Server Action `updateEmpresa`.
+- [x] **Filtro por Empresa Actual:**
+  - [x] Incluir selector dropdown para filtrar la columna de usuarios "No pertenecen a la empresa".
+  - [x] Implementar lógica para filtrar usuarios según "Todas", "Sin empresa asignada" o una empresa específica.
+- [x] **Clasificación como Externos:**
+  - [x] Mostrar de forma visual la clasificación (`accountType`) de los usuarios en los listados.
+  - [x] Añadir el sufijo `(Externo)` a los usuarios `USER` y `CLIENT`.
+  - [x] Actualizar las opciones en `PersonaForm.tsx` para reflejar el estado de "Tratado como externo".
+- [x] **Verificación y Build:**
+  - [x] Resolver problemas menores de linting.
+  - [x] Compilar el proyecto localmente con `pnpm build` para asegurar la integridad de tipos.
+- [x] **Despliegue y PM2:**
+  - [x] Reiniciar el proceso pm2 `elitepass-identity` para aplicar los cambios en caliente.
+- [x] **Control de Versiones:**
+  - [x] Incrementar la versión a `1.0.6` en `package.json`.
+  - [x] Hacer commit y push de los cambios en la rama principal.
