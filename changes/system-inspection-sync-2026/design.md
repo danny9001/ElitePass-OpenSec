@@ -1,7 +1,7 @@
 # Design: System Inspection & OpenSpec/Skills Sync (VM00 - VM02)
 
 ## 1. Local Diagnostics (VM00)
-- **Host Info**: Ubuntu 24.04 ARM64 (`10.0.0.5`).
+- **Host Info**: Ubuntu 24.04 ARM64 (`10.0.0.4`).
 - **PM2**: Check `elitepass-reservas`, `elitepass-pos`, `elitepass-identity`, `elitepass-payments`, `elitepass-noti-telegram`.
 - **System Metrics**: Disk usage (`df -h`), memory usage (`free -m`), CPU load.
 - **Nginx & SSL**: Inspect `/etc/nginx/sites-enabled/` and check SSL certificate expiration dates.

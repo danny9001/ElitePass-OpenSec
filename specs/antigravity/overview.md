@@ -14,7 +14,7 @@ El ecosistema sigue una filosofía de **Monolito Modular Híbrido con Microservi
 |---|---|---|
 | **OS** | Ubuntu 24.04.4 LTS ARM64 | Ubuntu 24.04.4 LTS x86_64 |
 | **Hostname** | VM00-Reservas-v2 | VM02-MUNDIAL |
-| **IP Privada** | 10.0.0.5 | 10.0.0.7 |
+| **IP Privada** | 10.0.0.4 | 10.0.0.7 |
 | **IP Pública** | 20.33.29.53 | — |
 | **Región Azure** | EastUS (ARM Ampere) | — |
 | **SSH** | Puerto 5001 | Puerto 5001 |

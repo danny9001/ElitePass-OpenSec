@@ -79,7 +79,7 @@ Ejemplos recientes: `geoblock-failure-analysis`, `identity-branding-fixes`, `sec
 
 | Servidor | IP privada | OS | Rol |
 |----------|-----------|-----|-----|
-| VM00-RESERVAS-v2 | 10.0.0.5 | Ubuntu 24.04 ARM64 | Principal |
+| VM00-RESERVAS-v2 | 10.0.0.4 | Ubuntu 24.04 ARM64 | Principal |
 | VM02-MUNDIAL | 10.0.0.7 | Ubuntu 24.04 x86_64 | Mundial 2026 |
 
 ---
