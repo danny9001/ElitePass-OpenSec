@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElitePass Premium File Upload UX Spec</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    /* Shimmer effect for progress bar */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .animate-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite linear;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-white">
+
+  <!-- Header Banner -->
+  <header class="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
+        <i data-lucide="upload-cloud" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-bold tracking-tight text-white">ElitePass Design System</h1>
+        <p class="text-xs text-slate-400">File Upload & Progress Interaction Mockups</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="px-2.5 py-1 text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full">v1.2.0 Spec</span>
+      <span class="px-2.5 py-1 text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">Interactive Specs</span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT PANEL: Configuration & Controls -->
+    <div class="lg:col-span-4 flex flex-col gap-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-indigo-400"></i> Control Remoto
+        </h2>
+        <p class="text-xs text-slate-400 mb-5 leading-relaxed">
+          Usa los controles de abajo para cambiar manualmente el estado del uploader de Branding Settings y probar las distintas variaciones.
+        </p>
+
+        <div class="flex flex-col gap-4">
+          <div>
+            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Estado Logo / Icono</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="setBrandingState('idle')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-white transition-all text-center">
+                Idle / Vacío
+              </button>
+              <button onclick="setBrandingState('uploading')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-white transition-all text-center">
+                Subiendo (45%)
+              </button>
+              <button onclick="setBrandingState('success')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-white transition-all text-center">
+                Éxito
+              </button>
+              <button onclick="setBrandingState('error')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-white transition-all text-center">
+                Error / Fallo
+              </button>
+            </div>
+          </div>
+
+          <div class="border-t border-slate-800/80 pt-4 mt-2">
+            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Simulador Comprobante</label>
+            <div class="flex flex-col gap-2">
+              <button onclick="startVoucherSimulation()" class="w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-lg transition-all shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i> Simular Subida Completa
+              </button>
+              <button onclick="triggerVoucherError()" class="w-full px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold text-xs rounded-lg transition-all flex items-center justify-center gap-2">
+                <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-rose-400"></i> Forzar Estado de Error
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Design Guidelines card -->
+      <div class="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-5">
+        <h3 class="text-xs font-bold text-slate-300 mb-3 flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-indigo-400"></i> Notas del Sistema
+        </h3>
+        <ul class="text-xs text-slate-400 flex flex-col gap-2.5 list-disc pl-4 leading-relaxed">
+          <li><strong>Branding Settings</strong>: Tamaño máx. 2MB. Tipo de archivo: PNG, JPEG, SVG. Formatos adaptados a logo horizontal (16:9) e icono circular (1:1).</li>
+          <li><strong>Comprobante de Pago</strong>: Tamaño máx. 10MB. Incluye proceso previo de escaneo de antivirus antes de subir, brindando seguridad técnica.</li>
+          <li><strong>Bloqueo de Botones</strong>: El botón primario inferior de guardado se sincroniza con el estado global de carga, evitando submit incompletos.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: File Uploader Showcase Grid -->
+    <div class="lg:col-span-8 flex flex-col gap-6">
+
+      <!-- SCENARIO 1: Branding Asset Uploaders -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
+              <i data-lucide="image" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="text-sm font-semibold text-white">1. Configuración de Branding (Ajustes de Organización)</h2>
+              <p class="text-xs text-slate-400">Subida de icono de marca y logotipo horizontal</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-slate-800 text-slate-300 rounded">Branding Assets</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <!-- Icon Upload (1:1 Circular preview) -->
+          <div class="md:col-span-4 flex flex-col items-center">
+            <span class="text-xs font-semibold text-slate-400 mb-3">Icono Organizacional (1:1)</span>
+            
+            <div id="icon-uploader-container" class="relative">
+              <!-- States rendered dynamically -->
+              <!-- Idle State -->
+              <div id="icon-state-idle" class="w-32 h-32 rounded-full border-2 border-dashed border-slate-700 hover:border-indigo-500 bg-slate-950/40 hover:bg-slate-950/60 cursor-pointer flex flex-col items-center justify-center p-4 text-center transition-all duration-300 group">
+                <i data-lucide="upload-cloud" class="w-6 h-6 text-slate-400 group-hover:text-indigo-400 group-hover:scale-110 transition-transform duration-300"></i>
+                <span class="mt-1.5 text-[10px] font-semibold text-slate-300 group-hover:text-white">Icono 1:1</span>
+                <span class="text-[8px] text-slate-500 mt-0.5">JPG, PNG (2MB)</span>
+              </div>
+              
+              <!-- Uploading State -->
+              <div id="icon-state-uploading" class="hidden w-32 h-32 rounded-full bg-slate-950 border border-slate-800 flex flex-col items-center justify-center p-4 text-center relative">
+                <svg class="w-14 h-14 transform -rotate-90">
+                  <circle cx="28" cy="28" r="23" stroke="currentColor" stroke-width="3" class="text-slate-800" fill="transparent"/>
+                  <circle cx="28" cy="28" r="23" stroke="currentColor" stroke-width="3" class="text-indigo-500 transition-all duration-300" stroke-dasharray="144.5" stroke-dashoffset="79.4" fill="transparent"/>
+                </svg>
+                <span class="absolute text-[10px] font-bold text-white mt-[-8px]">45%</span>
+                <span class="mt-2 text-[9px] text-slate-400 animate-pulse">Subiendo...</span>
+              </div>
+
+              <!-- Success State -->
+              <div id="icon-state-success" class="hidden w-32 h-32 rounded-full border border-emerald-500/30 bg-emerald-500/5 relative overflow-hidden group">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80" alt="Icon Preview" class="w-full h-full object-cover">
+                <div class="absolute top-1.5 right-1.5 bg-emerald-500 text-slate-950 rounded-full p-0.5 shadow-lg">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-slate-950 font-bold"></i>
+                </div>
+                <div class="absolute inset-0 bg-slate-950/80 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition-all duration-200">
+                  <button onclick="setBrandingState('idle')" class="p-1.5 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors" title="Reemplazar">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="setBrandingState('idle')" class="p-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 rounded-full transition-colors" title="Eliminar">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Error State -->
+              <div id="icon-state-error" class="hidden w-32 h-32 rounded-full border border-rose-500/30 bg-rose-500/5 flex flex-col items-center justify-center p-3 text-center relative">
+                <i data-lucide="alert-circle" class="w-6 h-6 text-rose-500 mb-1"></i>
+                <span class="text-[8px] text-rose-300 font-semibold px-1 line-clamp-2">Error de formato. Use PNG/JPG.</span>
+                <button onclick="setBrandingState('idle')" class="mt-1 text-[9px] font-bold text-rose-400 hover:text-rose-300 transition-colors flex items-center gap-0.5">
+                  <i data-lucide="refresh-cw" class="w-2.5 h-2.5"></i> Reintentar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logo Upload (16:9 Rectangular preview) -->
+          <div class="md:col-span-8 flex flex-col">
+            <span class="text-xs font-semibold text-slate-400 mb-3 text-center md:text-left">Logotipo Principal (16:9)</span>
+            
+            <div id="logo-uploader-container" class="relative w-full">
+              <!-- Idle State -->
+              <div id="logo-state-idle" class="w-full h-32 rounded-2xl border-2 border-dashed border-slate-700 hover:border-indigo-500 bg-slate-950/40 hover:bg-slate-950/60 cursor-pointer flex flex-col items-center justify-center p-4 text-center transition-all duration-300 group">
+                <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400 group-hover:text-indigo-400 group-hover:scale-110 transition-transform duration-300 mb-1"></i>
+                <span class="text-xs font-semibold text-slate-300 group-hover:text-white">Subir Logotipo Corporativo (16:9)</span>
+                <span class="text-[10px] text-slate-500 mt-1">Formatos SVG, PNG, JPG hasta 2MB</span>
+              </div>
+
+              <!-- Uploading State -->
+              <div id="logo-state-uploading" class="hidden w-full h-32 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col items-center justify-center p-6 text-center">
+                <div class="w-full max-w-xs flex flex-col gap-3">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-400 animate-pulse flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping"></span>
+                      Subiendo...
+                    </span>
+                    <span class="font-bold text-white">45%</span>
+                  </div>
+                  <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden relative">
+                    <div class="h-full w-[45%] bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-300 ease-out relative">
+                      <div class="absolute inset-0 bg-white/20 animate-shimmer" style="background-size: 200% 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Success State -->
+              <div id="logo-state-success" class="hidden w-full h-32 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 relative overflow-hidden group flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&h=200&q=80" alt="Logo Preview" class="w-full h-full object-cover">
+                <div class="absolute top-3 right-3 bg-emerald-500 text-slate-950 rounded-full p-0.5 shadow-lg">
+                  <i data-lucide="check" class="w-4 h-4 text-slate-950 font-bold"></i>
+                </div>
+                <div class="absolute inset-0 bg-slate-950/80 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-3 transition-all duration-200">
+                  <button onclick="setBrandingState('idle')" class="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors" title="Reemplazar">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                  </button>
+                  <button onclick="setBrandingState('idle')" class="p-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 rounded-full transition-colors" title="Eliminar">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Error State -->
+              <div id="logo-state-error" class="hidden w-full h-32 rounded-2xl border border-rose-500/30 bg-rose-500/5 flex flex-col items-center justify-center p-4 text-center">
+                <i data-lucide="alert-circle" class="w-8 h-8 text-rose-500 mb-1"></i>
+                <span class="text-xs text-rose-300 font-semibold px-2">El archivo excede el tamaño máximo de 2MB.</span>
+                <button onclick="setBrandingState('idle')" class="mt-2 text-xs font-bold text-rose-400 hover:text-rose-300 transition-colors flex items-center gap-1">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reintentar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENARIO 2: Payment Voucher Uploader -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="text-sm font-semibold text-white">2. Carga de Comprobante de Pago (Punto de Venta / Registro)</h2>
+              <p class="text-xs text-slate-400">Panel de subida interactivo con flujo de escaneo seguro</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-slate-800 text-slate-300 rounded">Vouchers</span>
+        </div>
+
+        <div class="w-full relative" id="voucher-uploader-container">
+          
+          <!-- State 1: Idle Dropzone -->
+          <div id="voucher-state-idle" class="group flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-800 hover:border-indigo-500 bg-slate-950/20 hover:bg-slate-950/40 rounded-2xl cursor-pointer transition-all duration-300 p-6 text-center" onclick="startVoucherSimulation()">
+            <div class="p-4 bg-indigo-500/10 rounded-full group-hover:scale-110 transition-transform duration-300">
+              <i data-lucide="upload-cloud" class="w-8 h-8 text-indigo-400"></i>
+            </div>
+            <p class="mt-4 text-sm font-semibold text-slate-200">
+              Arrastra tu comprobante de pago o <span class="text-indigo-400">búscalo aquí</span>
+            </p>
+            <p class="text-xs text-slate-500 mt-2">
+              Soporta PDF, PNG, JPG (Máx. 10MB)
+            </p>
+          </div>
+
+          <!-- State 2: Scanning Security -->
+          <div id="voucher-state-scanning" class="hidden w-full p-5 bg-slate-950/80 border border-slate-850 rounded-2xl flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-indigo-500/10 rounded-lg animate-pulse text-indigo-400">
+                <i data-lucide="file-text" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-white truncate">comprobante-transferencia-39485.pdf</p>
+                <p class="text-xs text-slate-400">1.4 MB</p>
+              </div>
+              <button onclick="cancelVoucherUpload()" class="text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span class="flex items-center gap-1.5 font-medium text-indigo-400">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
+                Analizando malware y seguridad...
+              </span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-indigo-500 animate-pulse w-full"></div>
+            </div>
+          </div>
+
+          <!-- State 3: Uploading (Active Progress Bar) -->
+          <div id="voucher-state-uploading" class="hidden w-full p-5 bg-slate-950/80 border border-slate-850 rounded-2xl flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-indigo-500/10 rounded-lg text-indigo-400">
+                <i data-lucide="file-text" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-white truncate">comprobante-transferencia-39485.pdf</p>
+                <p class="text-xs text-slate-400">1.4 MB</p>
+              </div>
+              <button onclick="cancelVoucherUpload()" class="text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-medium">Subiendo...</span>
+              <span class="font-bold text-white" id="voucher-progress-num">0%</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden relative">
+              <div id="voucher-progress-bar" class="h-full w-[0%] bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-150 ease-out relative">
+                <div class="absolute inset-0 bg-white/20 animate-shimmer" style="background-size: 200% 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- State 4: Success state -->
+          <div id="voucher-state-success" class="hidden w-full p-5 bg-emerald-500/5 border border-emerald-500/30 rounded-2xl flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="p-3 bg-emerald-500/10 rounded-lg text-emerald-400">
+                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-white truncate">comprobante-transferencia-39485.pdf</p>
+                <p class="text-xs text-emerald-400/80">1.4 MB • Comprobante cargado con éxito</p>
+              </div>
+            </div>
+            <button onclick="cancelVoucherUpload()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white rounded-lg transition-colors shrink-0">
+              Reemplazar
+            </button>
+          </div>
+
+          <!-- State 5: Error state -->
+          <div id="voucher-state-error" class="hidden w-full p-5 bg-rose-500/5 border border-rose-500/30 rounded-2xl flex flex-col gap-4">
+            <div class="flex items-start gap-3">
+              <div class="p-3 bg-rose-500/10 rounded-lg text-rose-400 shrink-0">
+                <i data-lucide="alert-circle" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-bold text-white">Error de Carga</p>
+                <p class="text-xs text-rose-300/80 mt-1" id="voucher-error-msg">El archivo excede el tamaño máximo permitido de 10MB.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 justify-end">
+              <button onclick="cancelVoucherUpload()" class="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white transition-colors">
+                Cancelar
+              </button>
+              <button onclick="startVoucherSimulation()" class="px-3.5 py-1.5 bg-rose-500 hover:bg-rose-600 text-xs font-semibold text-white rounded-lg transition-colors flex items-center gap-1.5">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reintentar
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FORM SUBMIT BUTTON COORDINATION -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col gap-4">
+        <div>
+          <h3 class="text-sm font-semibold text-white">3. Coordinación con Botones de Formulario</h3>
+          <p class="text-xs text-slate-400">Verifica cómo reacciona el botón primario de acción cuando existen subidas activas.</p>
+        </div>
+        
+        <div>
+          <!-- Submit Button Component -->
+          <button id="primary-submit-btn" class="relative w-full h-11 px-5 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/10 hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 select-none overflow-hidden">
+            <span id="submit-btn-label">Guardar Ajustes y Enviar</span>
+            <i id="submit-btn-icon" data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+    <p>ElitePass &copy; 2026. Diseñado con estándares de alta fidelidad, paleta HSL e interacciones de micro-animaciones.</p>
+  </footer>
+
+  <!-- Scripts for Simulation -->
+  <script>
+    // State management for Branding (Logo & Icon)
+    const brandingStates = ['idle', 'uploading', 'success', 'error'];
+    let currentBrandingState = 'idle';
+    let isVoucherUploading = false;
+    let voucherInterval = null;
+    let voucherTimeout = null;
+
+    function setBrandingState(state) {
+      currentBrandingState = state;
+      
+      // Hide all states
+      brandingStates.forEach(s => {
+        document.getElementById(`icon-state-${s}`).classList.add('hidden');
+        document.getElementById(`logo-state-${s}`).classList.add('hidden');
+      });
+
+      // Show specific state
+      document.getElementById(`icon-state-${state}`).classList.remove('hidden');
+      document.getElementById(`logo-state-${state}`).classList.remove('hidden');
+
+      updateSubmitButton();
+    }
+
+    // Voucher Upload Simulation
+    function startVoucherSimulation() {
+      // Clear any running simulation
+      cancelVoucherUpload();
+      
+      isVoucherUploading = true;
+      updateSubmitButton();
+
+      // Step 1: Scanning
+      document.getElementById('voucher-state-idle').classList.add('hidden');
+      document.getElementById('voucher-state-error').classList.add('hidden');
+      document.getElementById('voucher-state-success').classList.add('hidden');
+      document.getElementById('voucher-state-scanning').classList.remove('hidden');
+
+      voucherTimeout = setTimeout(() => {
+        // Step 2: Transition to uploading progress bar
+        document.getElementById('voucher-state-scanning').classList.add('hidden');
+        document.getElementById('voucher-state-uploading').classList.remove('hidden');
+        
+        let progress = 0;
+        const progressNum = document.getElementById('voucher-progress-num');
+        const progressBar = document.getElementById('voucher-progress-bar');
+        
+        progressNum.innerText = '0%';
+        progressBar.style.width = '0%';
+
+        voucherInterval = setInterval(() => {
+          progress += 5;
+          progressNum.innerText = `${progress}%`;
+          progressBar.style.width = `${progress}%`;
+
+          if (progress >= 100) {
+            clearInterval(voucherInterval);
+            isVoucherUploading = false;
+            
+            // Step 3: Success state
+            document.getElementById('voucher-state-uploading').classList.add('hidden');
+            document.getElementById('voucher-state-success').classList.remove('hidden');
+            
+            updateSubmitButton();
+          }
+        }, 120);
+      }, 1500);
+    }
+
+    function triggerVoucherError() {
+      cancelVoucherUpload();
+      
+      document.getElementById('voucher-state-idle').classList.add('hidden');
+      document.getElementById('voucher-state-success').classList.add('hidden');
+      document.getElementById('voucher-state-scanning').classList.add('hidden');
+      document.getElementById('voucher-state-uploading').classList.add('hidden');
+      
+      document.getElementById('voucher-error-msg').innerText = 'El archivo excede el tamaño máximo permitido de 10MB.';
+      document.getElementById('voucher-state-error').classList.remove('hidden');
+      
+      isVoucherUploading = false;
+      updateSubmitButton();
+    }
+
+    function cancelVoucherUpload() {
+      if (voucherTimeout) clearTimeout(voucherTimeout);
+      if (voucherInterval) clearInterval(voucherInterval);
+      
+      isVoucherUploading = false;
+      
+      document.getElementById('voucher-state-scanning').classList.add('hidden');
+      document.getElementById('voucher-state-uploading').classList.add('hidden');
+      document.getElementById('voucher-state-success').classList.add('hidden');
+      document.getElementById('voucher-state-error').classList.add('hidden');
+      document.getElementById('voucher-state-idle').classList.remove('hidden');
+
+      updateSubmitButton();
+    }
+
+    // Check if either branding or voucher is actively uploading and updates submit button
+    function updateSubmitButton() {
+      const isBrandingUploading = currentBrandingState === 'uploading';
+      const isUploading = isBrandingUploading || isVoucherUploading;
+      
+      const submitBtn = document.getElementById('primary-submit-btn');
+      const submitLabel = document.getElementById('submit-btn-label');
+      const submitIcon = document.getElementById('submit-btn-icon');
+
+      if (isUploading) {
+        submitBtn.disabled = true;
+        submitBtn.className = "relative w-full h-11 px-5 rounded-xl text-sm font-semibold bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50 transition-all duration-300 flex items-center justify-center gap-2 select-none overflow-hidden";
+        submitLabel.innerHTML = `<span class="flex items-center gap-2"><svg class="animate-spin h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Subiendo archivos...</span>`;
+        submitIcon.classList.add('hidden');
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.className = "relative w-full h-11 px-5 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/10 hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 select-none overflow-hidden cursor-pointer";
+        submitLabel.innerHTML = "Guardar Ajustes y Enviar";
+        submitIcon.classList.remove('hidden');
+      }
+    }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
