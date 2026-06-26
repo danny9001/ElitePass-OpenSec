@@ -16,33 +16,39 @@ As an AI coding assistant, you must STRICTLY follow the **OpenSpec / Spec-Driven
 
 ### 0. OBLIGATORIO: Verificar y descargar cambios ANTES de cualquier tarea
 
-**Siempre ejecutar primero:**
+**Siempre ejecutar ANTES de cualquier tarea (en VM02 y VM00):**
 ```bash
-# Verificar openspec — descargar si hay cambios remotos
+# openspec — GitHub: git@github.com:danny9001/ElitePass-OpenSec.git
 git -C /home/soporte/openspec fetch origin
 git -C /home/soporte/openspec status
-# Si hay cambios:
-git -C /home/soporte/openspec pull origin main
+git -C /home/soporte/openspec pull origin main   # si hay cambios
 
-# Verificar skills — descargar si hay cambios remotos
+# skills — GitHub: git@github.com:danny9001/skill-elite-pass-knowledge.git
 git -C /home/soporte/skill-elite-pass-knowledge fetch origin
 git -C /home/soporte/skill-elite-pass-knowledge status
-# Si hay cambios:
-git -C /home/soporte/skill-elite-pass-knowledge pull origin main
+git -C /home/soporte/skill-elite-pass-knowledge pull origin main   # si hay cambios
 ```
 
 **Siempre ejecutar AL FINALIZAR cualquier tarea:**
 ```bash
-# Subir cambios a GitHub
+# openspec: subir cambios
 cd /home/soporte/openspec && git add -A && git commit -m "Sync: <descripción>" && git push origin main
-# Sincronizar VM00
-sshpass -p 'Password2012' ssh -p 5001 soporte@10.0.0.4 'cd ~/openspec && git pull origin main'
+
+# skills: subir si hubo cambios en skills
+cd /home/soporte/skill-elite-pass-knowledge && git add -A && git commit -m "Sync: <descripción>" && git push origin main
+
+# VM00: pull de ambos repos
+sshpass -p 'Password2012' ssh -p 5001 soporte@10.0.0.4 '
+  cd ~/openspec && git pull origin main
+  cd ~/skill-elite-pass-knowledge && git pull origin main
+'
 ```
 
-Repos GitHub:
-- openspec: `git@github.com:danny9001/ElitePass-OpenSec.git` — branch `main`
-- skills: `git@github.com:danny9001/skill-elite-pass-knowledge.git`
-- VM02 openspec: `/home/soporte/openspec` | VM00 openspec: `~/openspec`
+Repos y rutas:
+| Repo | GitHub | VM02 | VM00 |
+|---|---|---|---|
+| openspec | `ElitePass-OpenSec` | `/home/soporte/openspec` | `/home/soporte/openspec` |
+| skills | `skill-elite-pass-knowledge` | `/home/soporte/skill-elite-pass-knowledge` | `/home/soporte/skill-elite-pass-knowledge` |
 
 ### 1. Analysis & Planning (Before Coding)
 Whenever tasked with a new feature, bug fix, or complex query:
