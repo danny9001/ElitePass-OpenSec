@@ -16,7 +16,7 @@ As an AI coding assistant, you must STRICTLY follow the **OpenSpec / Spec-Driven
 
 ### 0. OBLIGATORIO: Verificar y descargar cambios ANTES de cualquier tarea
 
-**Siempre ejecutar ANTES de cualquier tarea (en VM02 y VM00):**
+**Siempre ejecutar ANTES de cualquier plan, cambio, corrección o mejora:**
 ```bash
 # openspec — GitHub: git@github.com:danny9001/ElitePass-OpenSec.git
 git -C /home/soporte/openspec fetch origin
@@ -31,24 +31,26 @@ git -C /home/soporte/skill-elite-pass-knowledge pull origin main   # si hay camb
 
 **Siempre ejecutar AL FINALIZAR cualquier tarea:**
 ```bash
-# openspec: subir cambios
-cd /home/soporte/openspec && git add -A && git commit -m "Sync: <descripción>" && git push origin main
+# openspec: subir cambios (proposal.md, design.md, tasks.md, specs actualizados)
+git add -A && git commit -m "Sync: <descripción>" && git push origin main
 
-# skills: subir si hubo cambios en skills
+# skills: subir si se modificó alguna skill
 cd /home/soporte/skill-elite-pass-knowledge && git add -A && git commit -m "Sync: <descripción>" && git push origin main
 
-# VM00: pull de ambos repos
+# Sincronizar VM00
 sshpass -p 'Password2012' ssh -p 5001 soporte@10.0.0.4 '
-  cd ~/openspec && git pull origin main
-  cd ~/skill-elite-pass-knowledge && git pull origin main
+  git -C ~/openspec pull origin main
+  git -C ~/skill-elite-pass-knowledge pull origin main
 '
 ```
 
-Repos y rutas:
-| Repo | GitHub | VM02 | VM00 |
-|---|---|---|---|
-| openspec | `ElitePass-OpenSec` | `/home/soporte/openspec` | `/home/soporte/openspec` |
-| skills | `skill-elite-pass-knowledge` | `/home/soporte/skill-elite-pass-knowledge` | `/home/soporte/skill-elite-pass-knowledge` |
+Repos y rutas (idénticos en VM02 y VM00):
+| Repo | GitHub | Ruta local |
+|---|---|---|
+| openspec | `ElitePass-OpenSec` | `/home/soporte/openspec` |
+| skills | `skill-elite-pass-knowledge` | `/home/soporte/skill-elite-pass-knowledge` |
+
+> Las copias en `elitepass-monitor/openspec/skills/` y `elitepass-reservas/openspec/skills/` son OBSOLETAS.
 
 ### 1. Analysis & Planning (Before Coding)
 Whenever tasked with a new feature, bug fix, or complex query:
